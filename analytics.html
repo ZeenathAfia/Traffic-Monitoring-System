@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" class="transition duration-500">
+<head>
+<meta charset="UTF-8">
+<title>Traffic Analytics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+  darkMode: 'class'
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
+
+/* Floating blobs */
+.blob{
+position:absolute;
+border-radius:50%;
+filter:blur(80px);
+opacity:0.35;
+animation:float 12s infinite ease-in-out;
+}
+@keyframes float{
+0%,100%{ transform:translateY(0);}
+50%{ transform:translateY(-40px);}
+}
+</style>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 via-cyan-50 to-slate-50 
+dark:from-gray-900 dark:via-gray-800 dark:to-black 
+flex justify-center items-center min-h-screen transition duration-500">
+
+<!-- THEME BUTTON -->
+<button onclick="toggleTheme()" 
+class="absolute top-5 right-5 px-3 py-1 rounded-full bg-white/70 dark:bg-gray-700 text-xs shadow hover:scale-105 transition">
+🌙
+</button>
+
+<!-- BLOBS -->
+<div class="blob w-[300px] h-[300px] bg-indigo-400 top-[-100px] left-[-100px]"></div>
+<div class="blob w-[250px] h-[250px] bg-cyan-300 bottom-[-100px] right-[-100px]"></div>
+
+<div class="card w-[90%] max-w-[1000px] p-8 backdrop-blur-xl bg-white/70 dark:bg-gray-800/60 rounded-2xl shadow-2xl text-center">
+
+<h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
+🚦 Traffic Vehicle Analytics
+</h2>
+
+<div class="charts-container flex flex-col gap-6 mt-6">
+
+  <!-- TOP ROW -->
+  <div class="flex justify-center gap-5 flex-wrap">
+    <canvas id="trafficChart" class="bg-white rounded-xl p-4 shadow w-[400px] h-[250px]"></canvas>
+    <canvas id="congestionChart" class="bg-white rounded-xl p-4 shadow w-[400px] h-[250px]"></canvas>
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="flex justify-center">
+    <canvas id="predictionChart" class="bg-white rounded-xl p-4 shadow w-[400px] h-[250px]"></canvas>
+  </div>
+
+</div>
+
+<button onclick="goDashboard()"
+class="mt-6 px-6 py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-semibold hover:scale-105 hover:shadow-lg transition">
+Back to Dashboard
+</button>
+
+</div>
+
+<script>
+
+function toggleTheme(){
+document.documentElement.classList.toggle("dark");
+}
+
+// Time labels
+const times = ["8 AM","9 AM","10 AM","11 AM","12 PM","1 PM","2 PM","3 PM"];
+
+let vehicleCounts = [];
+let congestionLevels = [];
+
+for(let i=0;i<times.length;i++){
+  let v = Math.floor(Math.random()*100)+10;
+  vehicleCounts.push(v);
+
+  if(v < 20) congestionLevels.push(3);
+  else if(v < 40) congestionLevels.push(6);
+  else congestionLevels.push(9);
+}
+
+// Predictions
+const futureTimes = ["+1","+2","+3","+4","+5"];
+let predictions = [];
+let lastValue = vehicleCounts[vehicleCounts.length-1];
+
+for(let i=0;i<5;i++){
+  lastValue += Math.floor(Math.random()*10);
+  predictions.push(lastValue);
+}
+
+// Charts (UNCHANGED)
+new Chart(document.getElementById("trafficChart"),{
+  type:"line",
+  data:{
+    labels:times,
+    datasets:[{
+      label:"Vehicle Count",
+      data:vehicleCounts,
+      borderWidth:2,
+      tension:0.4,
+      borderColor:"#ff512f",
+      backgroundColor:"rgba(255,81,47,0.2)",
+      fill:true
+    }]
+  }
+});
+
+new Chart(document.getElementById("congestionChart"),{
+  type:"bar",
+  data:{
+    labels:times,
+    datasets:[{
+      label:"Congestion Level",
+      data:congestionLevels,
+      backgroundColor:"#42e695"
+    }]
+  }
+});
+
+new Chart(document.getElementById("predictionChart"),{
+  type:"line",
+  data:{
+    labels:futureTimes,
+    datasets:[{
+      label:"Future Traffic",
+      data:predictions,
+      borderWidth:2,
+      borderColor:"#00c6ff",
+      backgroundColor:"rgba(0,198,255,0.2)",
+      fill:true,
+      tension:0.4
+    }]
+  }
+});
+
+// Back
+function goDashboard(){
+  window.location.href="/dashboard"
+}
+
+</script>
+
+</body>
+</html>

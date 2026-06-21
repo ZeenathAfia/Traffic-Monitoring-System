@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" class="transition duration-500">
+<head>
+<meta charset="UTF-8">
+<title>Create Account</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+  darkMode: 'class'
+}
+</script>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+/* Floating blobs */
+.blob{
+position:absolute;
+border-radius:50%;
+filter:blur(80px);
+opacity:0.35;
+animation:float 12s infinite ease-in-out;
+}
+@keyframes float{
+0%,100%{ transform:translateY(0);}
+50%{ transform:translateY(-40px);}
+}
+</style>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 via-cyan-50 to-slate-50 
+dark:from-gray-900 dark:via-gray-800 dark:to-black 
+flex items-center justify-center min-h-screen transition duration-500">
+
+<button onclick="toggleTheme()" 
+class="absolute top-5 right-5 px-3 py-1 rounded-full bg-white/70 dark:bg-gray-700 text-xs shadow hover:scale-105 transition">
+🌙
+</button>
+
+<div class="blob w-[280px] h-[280px] bg-indigo-400 top-[-80px] left-[-80px]"></div>
+<div class="blob w-[220px] h-[220px] bg-cyan-300 bottom-[-80px] right-[-80px]"></div>
+
+<div class="card backdrop-blur-xl bg-white/70 dark:bg-gray-800/60 shadow-2xl rounded-2xl p-8 w-[380px] text-white">
+
+<h2 class="text-2xl font-semibold text-center text-gray-800 dark:text-white mb-6">
+📝 Create Account
+</h2>
+
+<div class="alert-success hidden bg-green-500/90 text-white py-2 rounded-lg mb-4 text-center text-sm font-semibold shadow" id="success-msg">
+    ✅ Account created successfully! You can now login.
+</div>
+
+<form action="/signup" method="POST" class="space-y-4">
+
+<div class="input-box">
+    <input type="text" name="username" placeholder="Username" required
+    class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-black dark:text-white focus:ring-2 focus:ring-cyan-400 outline-none transition">
+</div>
+
+<div class="input-box">
+    <input type="password" name="password" placeholder="Password" required
+    class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-black dark:text-white focus:ring-2 focus:ring-cyan-400 outline-none transition">
+</div>
+
+<!-- PHONE -->
+<div class="input-box">
+    <input type="tel" id="phone" name="phone" value="+91" required
+    class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-black dark:text-white focus:ring-2 focus:ring-cyan-400 outline-none transition">
+</div>
+
+<button type="submit"
+class="w-full py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-semibold hover:scale-105 hover:shadow-lg transition">
+Sign Up
+</button>
+
+</form>
+
+<p class="mt-4 text-center text-sm text-gray-600 dark:text-gray-300">
+Already have an account? 
+<a href="/" class="text-indigo-600 dark:text-cyan-400 hover:underline">Login</a>
+</p>
+
+</div>
+
+<script>
+function toggleTheme(){
+document.documentElement.classList.toggle("dark");
+}
+
+// enforce +91
+document.getElementById("phone").addEventListener("input", function(e){
+    if(!e.target.value.startsWith("+91")){
+        e.target.value = "+91";
+    }
+});
+
+// success message
+const params = new URLSearchParams(window.location.search);
+if (params.get('signup') === 'success') {
+    document.getElementById('success-msg').classList.remove('hidden');
+    window.history.replaceState({}, document.title, "/signup-page");
+}
+</script>
+
+</body>
+</html>
